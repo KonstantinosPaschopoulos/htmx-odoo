@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="htmx_list" name="HTMX List">
+        <t t-call="website.layout">
+            <div class="container">
+                <t t-foreach="products" t-as="product">
+                   <t t-call="htmx_odoo.htmx_list_row"/>
+                </t>
+
+                <div
+                    id="modals-here"
+                    class="modal modal-blur fade"
+                    style="display: none"
+                    aria-hidden="false"
+                    tabindex="-1"
+                >
+                    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                        <div class="modal-content"/>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+    <template id="htmx_list_row" name="HTMX List row">
+        <div class="row pb-1">
+            <div class="col-8">
+                <span t-out="product.name"/>
+                <button
+                    t-attf-hx-get="/htmx_list/info/{{product.id}}"
+                    hx-target="#modals-here"
+                    hx-trigger="click"
+                    data-bs-toggle="modal"
+                    data-bs-target="#modals-here"
+                    class="btn btn-light"
+                >
+                    Check Info
+                </button>
+            </div>
+            <div class="col-1 d-flex justify-content-center">
+                <button
+                    class="btn btn-primary"
+                    hx-target="closest div.row"
+                    hx-swap="afterend"
+                    t-attf-hx-get="/htmx_list/duplicate/{{product.id}}"
+                >
+                    Duplicate
+                </button>
+            </div>
+            <div class="col-2 d-flex justify-content-center">
+                <button
+                    class="btn btn-secondary"
+                    hx-target="closest div.row"
+                    hx-swap="outerHTML"
+                    t-attf-hx-get="/htmx_list/remove/{{product.id}}"
+                >
+                    Remove from list
+                </button>
+            </div>
+            <div class="col-1 d-flex justify-content-center">
+                <button
+                    class="btn btn-danger"
+                    hx-target="closest div.row"
+                    hx-swap="outerHTML"
+                    t-attf-hx-get="/htmx_list/delete/{{product.id}}"
+                >
+                    Delete
+                </button>
+            </div>
+        </div>
+    </template>
+
+    <template id="modal_info" name="Information Modal">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Information about <t t-out="product.name"/></h5>
+                </div>
+                <div class="modal-body">
+                    <p>Belongs in category <t t-out="product.categ_id.name"/></p>
+                    <p>Has a cost of <t t-out="product.standard_price"/></p>
+                    <p>Is similar to:</p>
+                    <p t-foreach="similar_products" t-as="similar_product">
+                        <a t-att-href="similar_product.website_url"><t t-out="similar_product.name"/></a>
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </template>
+</odoo>

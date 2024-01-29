@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="menu_website_htmx" model="website.menu">
+        <field name="name">HTMX</field>
+        <field name="url">/htmx_list</field>
+        <field name="parent_id" ref="website.main_menu"/>
+    </record>
+</odoo>
